@@ -131,16 +131,25 @@ function computeRiskScore(metrics) {
   let score = 0;
   const total = metrics.totalUsers || 1;
 
-  // Ratio d'inactifs
-  score += Math.min(20, Math.round((metrics.inactiveUsers / total) * 40));
-  // Ratio sans 2FA
-  score += Math.min(25, Math.round((metrics.no2faUsers / total) * 50));
-  // Fichiers partagés ext.
-  score += Math.min(20, metrics.externalShares > 50 ? 20 : Math.round(metrics.externalShares * 0.4));
-  // Apps OAuth tierces
-  score += Math.min(15, metrics.oauthApps > 30 ? 15 : Math.round(metrics.oauthApps * 0.5));
-  // Connexions échouées
-  score += Math.min(20, metrics.failedLogins > 100 ? 20 : Math.round(metrics.failedLogins * 0.2));
+  // Ratio d'inactifs (max 15)
+  score += Math.min(15, Math.round((metrics.inactiveUsers / total) * 30));
+  // Ratio sans 2FA (max 20)
+  score += Math.min(20, Math.round((metrics.no2faUsers / total) * 40));
+  // Fichiers partagés ext. (max 15)
+  score += Math.min(15, metrics.externalShares > 50 ? 15 : Math.round(metrics.externalShares * 0.3));
+  // Apps OAuth tierces (max 10)
+  score += Math.min(10, metrics.oauthApps > 30 ? 10 : Math.round(metrics.oauthApps * 0.3));
+  // Connexions échouées (max 10)
+  score += Math.min(10, metrics.failedLogins > 100 ? 10 : Math.round(metrics.failedLogins * 0.1));
+  
+  // Nouveaux facteurs:
+  // Alertes de haute sévérité (max 15)
+  if (metrics.highSeverityAlerts > 0) {
+    score += Math.min(15, metrics.highSeverityAlerts * 5);
+  }
+  // DNS manquants (max 15)
+  if (metrics.missingSpf > 0) score += 7;
+  if (metrics.missingDmarc > 0) score += 8;
 
   return Math.min(100, score);
 }

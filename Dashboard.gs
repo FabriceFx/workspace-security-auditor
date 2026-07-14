@@ -64,6 +64,8 @@ function _buildDashboard(ss, tr, metrics) {
     nonCompliant  : metrics.mDevices?.nonCompliant || 0,
     missingSpf    : metrics.mDNS?.missingSpf       || 0,
     missingDmarc  : metrics.mDNS?.missingDmarc     || 0,
+    orphanGroups  : metrics.mGroups?.orphanGroups  || 0,
+    highSeverityAlerts: metrics.mAlerts?.highSeverity || 0,
   };
 
   // Calcul du score de risque global
@@ -76,6 +78,7 @@ function _buildDashboard(ss, tr, metrics) {
     failedLogins  : m.failedLogins,
     missingSpf    : m.missingSpf,
     missingDmarc  : m.missingDmarc,
+    highSeverityAlerts: m.highSeverityAlerts,
   });
   const riskLvl = riskLevel(riskScore);
 
@@ -169,8 +172,33 @@ function _buildDashboard(ss, tr, metrics) {
     sheet.setRowHeight(kpiRow2 + 3, 28);
   });
 
+  // ── Section Alertes & Appareils ─────────────────────────────
+  const alertRow = kpiRow2 + 5;
+  _writeSectionTitle(sheet, alertRow, numCols, getLang() === 'fr' ? '🚨 Alertes & MDM' : '🚨 Alerts & MDM');
+  sheet.setRowHeight(alertRow, 28);
+
+  const alertConfigs = [
+    { label: getLang() === 'fr' ? 'Alertes Critiques' : 'Critical Alerts', value: m.highSeverityAlerts || 0,
+      level: m.highSeverityAlerts > 0 ? 'danger' : 'ok', col: 1 },
+    { label: getLang() === 'fr' ? 'Grp Orphelins' : 'Orphan Groups', value: m.orphanGroups || 0,
+      level: m.orphanGroups > 0 ? 'warning' : 'ok', col: 3 },
+    { label: getLang() === 'fr' ? 'Appareils MDM' : 'MDM Devices', value: m.totalDevices || 0,
+      level: 'info', col: 5 },
+    { label: getLang() === 'fr' ? 'Appareils non conf.' : 'Non-compliant', value: m.nonCompliant || 0,
+      level: m.nonCompliant > 0 ? 'warning' : 'ok', col: 7 },
+  ];
+
+  const kpiRow3 = alertRow + 1;
+  alertConfigs.forEach(kpi => {
+    writeKpiCell(sheet, kpiRow3, kpi.col, kpi.label, kpi.value, kpi.level);
+    sheet.setRowHeight(kpiRow3, 28);
+    sheet.setRowHeight(kpiRow3 + 1, 24);
+    sheet.setRowHeight(kpiRow3 + 2, 36);
+    sheet.setRowHeight(kpiRow3 + 3, 28);
+  });
+
   // ── Score de risque visuel ────────────────────────────────
-  const scoreRow = kpiRow2 + 5;
+  const scoreRow = kpiRow3 + 5;
   _writeSectionTitle(sheet, scoreRow, numCols, getLang() === 'fr' ? '📊 Score de risque global' : '📊 Global Risk Score');
   sheet.setRowHeight(scoreRow, 28);
 

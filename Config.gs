@@ -30,6 +30,7 @@ const SHEETS = {
   DRIVE     : '📁 Drive',
   SECURITY  : '🔐 Sécurité',
   LOGS      : '📋 Logs Admin',
+  ALERTS    : '🚨 Alertes',
   LOGIN     : '🔑 Connexions',
   DEVICES   : '📱 Appareils',
   DNS       : '🌐 DNS',
@@ -62,6 +63,7 @@ const I18N = {
     menu_drive           : '📁 Drive & Partages',
     menu_security        : '🔐 Sécurité & OAuth',
     menu_logs            : '📋 Journaux Admin',
+    menu_alerts          : '🚨 Centre d\'Alertes',
     menu_dns             : '🌐 DNS (SPF/DMARC)',
     menu_login           : '🔑 Connexions',
     menu_devices         : '📱 Appareils',
@@ -131,6 +133,14 @@ const I18N = {
     col_log_event        : 'Événement',
     col_log_target       : 'Cible',
     col_log_ip           : 'Adresse IP',
+
+    // En-têtes — Alertes
+    col_alert_time       : 'Date/Heure',
+    col_alert_type       : 'Type d\'alerte',
+    col_alert_severity   : 'Sévérité',
+    col_alert_status     : 'Statut',
+    col_alert_source     : 'Source',
+    col_alert_desc       : 'Description technique',
 
     // En-têtes — Connexions
     col_login_time       : 'Date/Heure',
@@ -213,6 +223,7 @@ const I18N = {
     menu_drive           : '📁 Drive & Sharing',
     menu_security        : '🔐 Security & OAuth',
     menu_logs            : '📋 Admin Logs',
+    menu_alerts          : '🚨 Alert Center',
     menu_dns             : '🌐 DNS (SPF/DMARC)',
     menu_login           : '🔑 Login Activity',
     menu_devices         : '📱 Mobile Devices',
@@ -282,6 +293,14 @@ const I18N = {
     col_log_event        : 'Event',
     col_log_target       : 'Target',
     col_log_ip           : 'IP Address',
+
+    // En-têtes — Alertes
+    col_alert_time       : 'Date/Time',
+    col_alert_type       : 'Alert Type',
+    col_alert_severity   : 'Severity',
+    col_alert_status     : 'Status',
+    col_alert_source     : 'Source',
+    col_alert_desc       : 'Technical Description',
 
     // En-têtes — Connexions
     col_login_time       : 'Date/Time',

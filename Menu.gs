@@ -274,6 +274,7 @@ function runAuditLogs()     { auditLogs(); }
 function runAuditLogin()    { auditLoginActivity(); }
 function runAuditDevices()  { auditDevices(); }
 function runAuditDNS()      { auditDNS(); }
+function runAuditAlerts()   { auditAlerts(); }
 
 /**
  * Retourne les données nécessaires à l'initialisation de la Sidebar.
@@ -290,10 +291,11 @@ function getSidebarData(rebuildDashboard = false) {
   const mLogin    = _getMetrics('login');
   const mDevices  = _getMetrics('devices');
   const mDNS      = _getMetrics('dns');
+  const mAlerts   = _getMetrics('alerts');
 
   if (rebuildDashboard) {
     try {
-      _buildDashboard(getSS(), t(), { mUsers, mGroups, mDrive, mSecurity, mLogin, mDevices, mDNS });
+      _buildDashboard(getSS(), t(), { mUsers, mGroups, mDrive, mSecurity, mLogin, mDevices, mDNS, mAlerts });
       moveDashboardFirst(getSS());
     } catch(e) { logError('getSidebarData-buildDashboard', e); }
   }
@@ -309,6 +311,7 @@ function getSidebarData(rebuildDashboard = false) {
     failedLogins  : mLogin.failedLogins   || 0,
     totalDevices  : mDevices.totalDevices || 0,
     nonCompliant  : mDevices.nonCompliant || 0,
+    highSeverityAlerts: mAlerts.highSeverity || 0,
   };
 
   return {

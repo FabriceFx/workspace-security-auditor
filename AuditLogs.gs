@@ -127,9 +127,12 @@ function _translateAdminEvent(name) {
     'TOGGLE_SERVICE_ENABLED'        : lang === 'fr' ? 'Activation/désactivation service' : 'Service toggled',
     'ENFORCE_STRONG_AUTHENTICATION' : lang === 'fr' ? 'Authentification forte'     : 'Strong auth enforced',
     'ENROLL_USER_IN_2_STEP_VERIFICATION': lang === 'fr' ? '2FA activé'             : '2FA enrolled',
-    // OAuth
     'AUTHORIZE_API_CLIENT_ACCESS'   : lang === 'fr' ? 'Autorisation client OAuth'  : 'OAuth client authorized',
     'REVOKE_API_CLIENT_ACCESS'      : lang === 'fr' ? 'Révocation client OAuth'    : 'OAuth client revoked',
+    // Risques ciblés (Account Takeover / Exfiltration)
+    'CHANGE_MAIL_FORWARDING_SETTING': lang === 'fr' ? '🚨 Transfert email activé'  : '🚨 Mail forwarding enabled',
+    'CHANGE_RECOVERY_EMAIL'         : lang === 'fr' ? '⚠️ Email secours modifié'   : '⚠️ Recovery email changed',
+    'CHANGE_RECOVERY_PHONE'         : lang === 'fr' ? '⚠️ Tél. secours modifié'    : '⚠️ Recovery phone changed',
     // Applications
     'INSTALL_APPLICATION'           : lang === 'fr' ? 'Installation application'   : 'App installed',
     'UNINSTALL_APPLICATION'         : lang === 'fr' ? 'Désinstallation application': 'App uninstalled',

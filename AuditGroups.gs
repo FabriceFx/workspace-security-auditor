@@ -31,7 +31,7 @@ function auditGroups() {
 
   const domains = getDomains();
   const allRows = [];
-  const metrics = { totalGroups: 0, emptyGroups: 0, externalGroups: 0 };
+  const metrics = { totalGroups: 0, emptyGroups: 0, externalGroups: 0, orphanGroups: 0 };
   
   const startTimeMs = Date.now();
   const MAX_EXECUTION_TIME = 5 * 60 * 1000; // 5 minutes
@@ -72,10 +72,11 @@ function auditGroups() {
         }
 
         if (members.length === 0) {
+          metrics.orphanGroups++;
           // Groupe sans membre : une ligne quand même
           allRows.push([
             domain,
-            groupName,
+            '👻 ' + groupName,
             groupEmail,
             memberCount,
             visibility,
@@ -85,11 +86,14 @@ function auditGroups() {
             '—',
           ]);
         } else {
+          const hasOwner = members.some(m => m.role === 'OWNER');
+          if (!hasOwner) metrics.orphanGroups++;
+
           // Une ligne par membre avec les données répétées
           members.forEach((member) => {
             allRows.push([
               domain,
-              groupName,
+              (!hasOwner ? '👻 ' : '') + groupName,
               groupEmail,
               memberCount,
               visibility,
