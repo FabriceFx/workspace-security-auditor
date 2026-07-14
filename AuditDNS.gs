@@ -56,13 +56,14 @@ function auditDNS() {
     try {
       const spfResp = UrlFetchApp.fetch(`https://dns.google/resolve?name=${domain}&type=TXT`, {muteHttpExceptions: true});
       const spfData = JSON.parse(spfResp.getContentText());
+      const isDNSSEC = spfData.AD === true;
       if (spfData.Answer) {
         for (const ans of spfData.Answer) {
           const txt = ans.data;
           if (txt.includes('v=spf1')) {
             spfVal = txt;
             if (txt.includes('-all')) {
-              spfStatus = '✅ Sécurisé (Hard Fail)';
+              spfStatus = isDNSSEC ? '✅ Sécurisé (Hard Fail)' : '✅ Sécurisé (Hard Fail) [Non-DNSSEC]';
             } else if (txt.includes('~all')) {
               spfStatus = '⚠️ Faible (Soft Fail)';
               isSecure = false;
@@ -91,15 +92,16 @@ function auditDNS() {
     try {
       const dmarcResp = UrlFetchApp.fetch(`https://dns.google/resolve?name=_dmarc.${domain}&type=TXT`, {muteHttpExceptions: true});
       const dmarcData = JSON.parse(dmarcResp.getContentText());
+      const isDNSSEC = dmarcData.AD === true;
       if (dmarcData.Answer) {
         for (const ans of dmarcData.Answer) {
           const txt = ans.data;
           if (txt.includes('v=DMARC1')) {
             dmarcVal = txt;
             if (txt.includes('p=reject')) {
-              dmarcStatus = '✅ Sécurisé (Reject)';
+              dmarcStatus = isDNSSEC ? '✅ Sécurisé (Reject)' : '✅ Sécurisé (Reject) [Non-DNSSEC]';
             } else if (txt.includes('p=quarantine')) {
-              dmarcStatus = '✅ Modéré (Quarantine)';
+              dmarcStatus = isDNSSEC ? '✅ Modéré (Quarantine)' : '✅ Modéré (Quarantine) [Non-DNSSEC]';
             } else if (txt.includes('p=none')) {
               dmarcStatus = '⚠️ Faible (Observation)';
               isSecure = false;

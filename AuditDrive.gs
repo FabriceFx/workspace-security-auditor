@@ -173,12 +173,24 @@ function populateSelect(type) {
   const key  = type + 's'; // departments, costCenters, orgUnits
   const list = (filterOptions && filterOptions[key]) || [];
   
+  function escapeHtml(unsafe) {
+    return (unsafe || '').toString()
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+  }
+
   if (list.length === 0) {
     select.innerHTML = '<option value="">' + empty + '</option>';
   } else {
     select.innerHTML =
       '<option value="">' + (LANG === 'fr' ? '— Choisir —' : '— Choose —') + '</option>' +
-      list.map(v => '<option value="' + v + '">' + v + '</option>').join('');
+      list.map(v => {
+        const safeV = escapeHtml(v);
+        return '<option value="' + safeV + '">' + safeV + '</option>';
+      }).join('');
   }
   
   select.style.display = '';
@@ -206,7 +218,11 @@ function onUserSearch(query) {
     google.script.run
       .withSuccessHandler(results => {
         if (results.length > 0) {
-          ud.innerHTML = results.map(u => '<option value="' + u.email + '" style="padding:4px 8px;">' + u.label + '</option>').join('');
+          ud.innerHTML = results.map(u => {
+            const safeEmail = escapeHtml(u.email);
+            const safeLabel = escapeHtml(u.label);
+            return '<option value="' + safeEmail + '" style="padding:4px 8px;">' + safeLabel + '</option>';
+          }).join('');
           ud.style.display = 'block';
         } else {
           ud.style.display = 'none';
@@ -271,7 +287,8 @@ onTypeChange('all');
  * @returns {{ departments: string[], costCenters: string[], orgUnits: string[] }}
  */
 function getDriveFilterOptions() {
-  const cache = CacheService.getDocumentCache();
+  // Utilisation de getUserCache au lieu de getDocumentCache pour éviter les fuites de données
+  const cache = CacheService.getUserCache();
   const cachedData = cache ? cache.get('DriveFilterOptions') : null;
   if (cachedData) {
     try {
