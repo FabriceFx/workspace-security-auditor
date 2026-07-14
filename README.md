@@ -12,6 +12,7 @@ This tool performs a read-only audit across multiple Google Workspace vectors:
 - **🤖 OAuth & Integrations**: Inventories third-party apps connected to user accounts, categorizing them by risk severity (Critical, High, Medium) based on granted scopes. Detects legacy App Passwords bypassing 2FA.
 - **📱 Mobile Devices (MDM)**: Lists managed devices and highlights non-compliant or unencrypted BYOD endpoints.
 - **👥 Groups**: Identifies external members in internal groups and orphaned groups without owners.
+- **📋 Admin Logs**: Highlights critical administrative actions (e.g., suspicious mail forwarding, recovery email changes) to detect account takeover attempts.
 
 ## 🛠 Prerequisites
 
@@ -63,7 +64,7 @@ Cet outil effectue un audit en lecture seule sur plusieurs vecteurs de Google Wo
 - **🤖 OAuth & Intégrations** : Dresse l'inventaire des applications tierces connectées aux comptes utilisateurs, en les classant par niveau de risque (Critique, Élevé, Moyen) selon les permissions accordées. Détecte les mots de passe d'application obsolètes qui contournent la 2FA.
 - **📱 Appareils Mobiles (MDM)** : Liste les appareils gérés et met en évidence les terminaux non conformes ou non chiffrés.
 - **👥 Groupes** : Identifie les membres externes dans les groupes internes et les groupes sans propriétaire.
-
+- **📋 Journaux Admin** : Met en évidence les actions administratives critiques (ex: transferts de mails suspects, modification des emails de secours) pour détecter les tentatives de compromission de compte.
 ## 🛠 Prérequis
 
 Cet outil s'exécutant dans Google Apps Script, vous n'avez pas besoin d'héberger de serveur. Cependant, vous avez besoin des permissions appropriées :
