@@ -10,7 +10,7 @@
  * Appelé depuis le menu "Drive & Partages".
  */
 function showDriveFilterDialog() {
-  const tr   = t();
+  const tr = t();
   const lang = getLang();
 
   const html = HtmlService.createHtmlOutput(`
@@ -293,13 +293,13 @@ function getDriveFilterOptions() {
   if (cachedData) {
     try {
       return JSON.parse(cachedData);
-    } catch(e) {}
+    } catch (e) { }
   }
 
-  const domains     = getDomains();
+  const domains = getDomains();
   const departments = new Set();
   const costCenters = new Set();
-  const orgUnits    = new Set();
+  const orgUnits = new Set();
 
   for (const domain of domains) {
     try {
@@ -317,22 +317,22 @@ function getDriveFilterOptions() {
           }
         }
       }
-    } catch(e) {
+    } catch (e) {
       logError('getDriveFilterOptions', e);
     }
   }
 
   const result = {
-    departments : [...departments].sort(),
-    costCenters : [...costCenters].sort(),
-    orgUnits    : [...orgUnits].sort(),
+    departments: [...departments].sort(),
+    costCenters: [...costCenters].sort(),
+    orgUnits: [...orgUnits].sort(),
   };
 
   if (cache) {
     try {
       // Met en cache pour 6 heures (21600s)
       cache.put('DriveFilterOptions', JSON.stringify(result), 21600);
-    } catch(e) {
+    } catch (e) {
       logError('getDriveFilterOptions-cache', e);
     }
   }
@@ -351,7 +351,7 @@ function searchAdminDirectory(query, type) {
   if (!query || query.length < 2) return [];
   const results = [];
   const domains = getDomains();
-  
+
   for (const domain of domains) {
     const cleanDomain = domain.trim().toLowerCase();
     try {
@@ -360,12 +360,12 @@ function searchAdminDirectory(query, type) {
         try {
           const res1 = AdminDirectory.Users.list({ domain: cleanDomain, query: `name:'${query}*'`, maxResults: 10, fields: 'users(primaryEmail, name)' });
           if (res1.users) res1.users.forEach(u => resultsMap.set(u.primaryEmail, u));
-        } catch(e) { logError('searchAdminDirectory-user-name', e); }
-        
+        } catch (e) { logError('searchAdminDirectory-user-name', e); }
+
         try {
           const res2 = AdminDirectory.Users.list({ domain: cleanDomain, query: `email:'${query}*'`, maxResults: 10, fields: 'users(primaryEmail, name)' });
           if (res2.users) res2.users.forEach(u => resultsMap.set(u.primaryEmail, u));
-        } catch(e) { logError('searchAdminDirectory-user-email', e); }
+        } catch (e) { logError('searchAdminDirectory-user-email', e); }
 
         for (const u of resultsMap.values()) {
           const fullName = [u.name && u.name.fullName].filter(Boolean).join(' ') || u.primaryEmail;
@@ -376,12 +376,12 @@ function searchAdminDirectory(query, type) {
         try {
           const res1 = AdminDirectory.Groups.list({ domain: cleanDomain, query: `name:'${query}*'`, maxResults: 10, fields: 'groups(email, name)' });
           if (res1.groups) res1.groups.forEach(g => resultsMap.set(g.email, g));
-        } catch(e) { logError('searchAdminDirectory-group-name', e); }
+        } catch (e) { logError('searchAdminDirectory-group-name', e); }
 
         try {
           const res2 = AdminDirectory.Groups.list({ domain: cleanDomain, query: `email:'${query}*'`, maxResults: 10, fields: 'groups(email, name)' });
           if (res2.groups) res2.groups.forEach(g => resultsMap.set(g.email, g));
-        } catch(e) { logError('searchAdminDirectory-group-email', e); }
+        } catch (e) { logError('searchAdminDirectory-group-email', e); }
 
         // Fallback si 0 groupe trouvé (ou erreur)
         if (resultsMap.size === 0) {
@@ -392,7 +392,7 @@ function searchAdminDirectory(query, type) {
                 if (g.email && g.email.toLowerCase().endsWith('@' + cleanDomain)) resultsMap.set(g.email, g);
               });
             }
-          } catch(e) { logError('searchAdminDirectory-group-name-fallback', e); }
+          } catch (e) { logError('searchAdminDirectory-group-name-fallback', e); }
 
           try {
             const res4 = AdminDirectory.Groups.list({ customer: 'my_customer', query: `email:'${query}*'`, maxResults: 10, fields: 'groups(email, name)' });
@@ -401,7 +401,7 @@ function searchAdminDirectory(query, type) {
                 if (g.email && g.email.toLowerCase().endsWith('@' + cleanDomain)) resultsMap.set(g.email, g);
               });
             }
-          } catch(e) { logError('searchAdminDirectory-group-email-fallback', e); }
+          } catch (e) { logError('searchAdminDirectory-group-email-fallback', e); }
         }
 
         for (const g of resultsMap.values()) {
@@ -437,8 +437,8 @@ function runAuditDrive() {
  * @param {{ filterType?: string, filterValue?: string }} [filterOpts]
  */
 function auditDrive(filterOpts) {
-  const tr    = t();
-  const ss    = getSS();
+  const tr = t();
+  const ss = getSS();
   const sheet = getOrCreateSheet(ss, SHEETS.DRIVE);
   const filter = filterOpts || { filterType: 'all', filterValue: '' };
 
@@ -463,7 +463,7 @@ function auditDrive(filterOpts) {
   const domains = getDomains();
   const allRows = [];
   const metrics = { externalShares: 0, publicFiles: 0, totalFiles: 0 };
-  
+
   // Cache des Shared Drives pour afficher l'emplacement
   const sharedDrives = _getSharedDrivesMap();
 
@@ -482,7 +482,7 @@ function auditDrive(filterOpts) {
         const users = _fetchUsers(domain);
         const filtered = users.filter(u => _matchesFilter(u, filter));
         targetEmails.push(...filtered.map(u => u.primaryEmail));
-      } catch(e) { logError('auditDrive-filterUsers', e); }
+      } catch (e) { logError('auditDrive-filterUsers', e); }
     }
   }
 
@@ -501,8 +501,8 @@ function auditDrive(filterOpts) {
         metrics.externalShares++;
         if (sharingType === 'anyone') metrics.publicFiles++;
 
-        const location = file.driveId 
-          ? `🏢 ${sharedDrives[file.driveId] || 'Shared Drive'}` 
+        const location = file.driveId
+          ? `🏢 ${sharedDrives[file.driveId] || 'Shared Drive'}`
           : `👤 ${getLang() === 'fr' ? 'Mon Drive' : 'My Drive'}`;
 
         allRows.push([
@@ -597,8 +597,8 @@ function _fetchGroupMembers(groupEmail) {
   let pageToken = null;
   try {
     do {
-      const res = AdminDirectory.Members.list(groupEmail, { 
-        maxResults: 200, 
+      const res = AdminDirectory.Members.list(groupEmail, {
+        maxResults: 200,
         pageToken: pageToken,
         fields: 'nextPageToken, members(email, type)'
       });
@@ -608,7 +608,7 @@ function _fetchGroupMembers(groupEmail) {
       }
       pageToken = res.nextPageToken;
     } while (pageToken);
-  } catch(e) {
+  } catch (e) {
     logError('_fetchGroupMembers', e);
   }
   return members;
@@ -628,17 +628,17 @@ function _fetchSharedFilesForUsers(emails) {
   const CHUNK = 20;
 
   for (let i = 0; i < emails.length; i += CHUNK) {
-    const chunk   = emails.slice(i, i + CHUNK);
+    const chunk = emails.slice(i, i + CHUNK);
     // Recherche les fichiers dont l'utilisateur est propriétaire OU créateur (ex: Shared Drives)
-    const ownerQ  = chunk.map(e => `('${e}' in owners OR '${e}' in creators)`).join(' OR ');
+    const ownerQ = chunk.map(e => `('${e}' in owners OR '${e}' in creators)`).join(' OR ');
     const sharingQ = `visibility='anyoneWithLink' OR visibility='anyoneCanFind'`;
-    const query    = `(${ownerQ}) AND (${sharingQ})`;
+    const query = `(${ownerQ}) AND (${sharingQ})`;
 
     let pageToken = null;
     do {
       const params = {
         q: query,
-        fields: 'nextPageToken, files(id, name, mimeType, owners, permissions, modifiedTime, webViewLink, shared)',
+        fields: 'nextPageToken, files(id, name, mimeType, owners, permissions(type, emailAddress, role, deleted), modifiedTime, webViewLink, shared)',
         pageSize: 200,
         supportsAllDrives: true,
         includeItemsFromAllDrives: true,
@@ -648,7 +648,7 @@ function _fetchSharedFilesForUsers(emails) {
         const resp = Drive.Files.list(params);
         if (resp.files) results.push(...resp.files);
         pageToken = resp.nextPageToken;
-      } catch(e) {
+      } catch (e) {
         logError('_fetchSharedFilesForUsers', e);
         break;
       }
@@ -664,13 +664,13 @@ function _fetchSharedFilesForUsers(emails) {
  */
 function _fetchSharedFiles() {
   const results = [];
-  let pageToken  = null;
-  const query    = "visibility='anyoneWithLink' OR visibility='anyoneCanFind'";
+  let pageToken = null;
+  const query = "visibility='anyoneWithLink' OR visibility='anyoneCanFind'";
 
   do {
     const params = {
       q: query,
-      fields: 'nextPageToken, files(id, name, mimeType, owners, permissions, modifiedTime, webViewLink, shared)',
+      fields: 'nextPageToken, files(id, name, mimeType, owners, permissions(type, emailAddress, role, deleted), modifiedTime, webViewLink, shared)',
       pageSize: 200,
       supportsAllDrives: true,
       includeItemsFromAllDrives: true,
@@ -680,7 +680,7 @@ function _fetchSharedFiles() {
       const response = Drive.Files.list(params);
       if (response.files) results.push(...response.files);
       pageToken = response.nextPageToken;
-    } catch(e) {
+    } catch (e) {
       logError('_fetchSharedFiles', e);
       break;
     }
@@ -718,9 +718,15 @@ function _getSharedDrivesMap() {
 /**
  * Détermine le type de partage à risque d'un fichier.
  */
+
 function _getSharingType(file, domain) {
   if (!file.permissions) return null;
   for (const perm of file.permissions) {
+    // On ignore les bloqueurs d'héritage (rôle 'none') et les permissions supprimées
+    if (perm.deleted === true || perm.role === 'none') {
+      continue;
+    }
+    
     if (perm.type === 'anyone') return 'anyone';
     if (perm.type === 'user'  && perm.emailAddress && !perm.emailAddress.endsWith('@' + domain)) return 'external';
     if (perm.type === 'group' && perm.emailAddress && !perm.emailAddress.endsWith('@' + domain)) return 'external';
@@ -733,9 +739,9 @@ function _getSharingType(file, domain) {
  */
 function _sharingTypeLabel(type, tr) {
   const map = {
-    anyone:   `🚨 ${tr.status_anyone}`,
+    anyone: `🚨 ${tr.status_anyone}`,
     external: `⚠️ ${tr.status_external}`,
-    domain:   `ℹ️ ${tr.status_domain}`,
+    domain: `ℹ️ ${tr.status_domain}`,
   };
   return map[type] || type;
 }
@@ -758,15 +764,15 @@ function _getSharedWithLabel(file, domain, tr) {
 function _mimeLabel(mime) {
   const lang = getLang();
   const map = {
-    'application/vnd.google-apps.document'     : lang === 'fr' ? 'Document'    : 'Doc',
-    'application/vnd.google-apps.spreadsheet'  : lang === 'fr' ? 'Tableur'     : 'Sheet',
-    'application/vnd.google-apps.presentation' : lang === 'fr' ? 'Présentation': 'Slides',
-    'application/vnd.google-apps.form'         : 'Form',
-    'application/vnd.google-apps.folder'       : lang === 'fr' ? 'Dossier'     : 'Folder',
-    'application/vnd.google-apps.script'       : 'Apps Script',
-    'application/pdf'                          : 'PDF',
-    'image/jpeg'                               : 'JPEG',
-    'image/png'                                : 'PNG',
+    'application/vnd.google-apps.document': lang === 'fr' ? 'Document' : 'Doc',
+    'application/vnd.google-apps.spreadsheet': lang === 'fr' ? 'Tableur' : 'Sheet',
+    'application/vnd.google-apps.presentation': lang === 'fr' ? 'Présentation' : 'Slides',
+    'application/vnd.google-apps.form': 'Form',
+    'application/vnd.google-apps.folder': lang === 'fr' ? 'Dossier' : 'Folder',
+    'application/vnd.google-apps.script': 'Apps Script',
+    'application/pdf': 'PDF',
+    'image/jpeg': 'JPEG',
+    'image/png': 'PNG',
   };
   if (!mime) return '—';
   if (map[mime]) return map[mime];
