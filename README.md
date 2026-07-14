@@ -42,7 +42,9 @@ Since this tool runs in Google Apps Script, you do not need to host any server. 
 
 ## ⚠️ Important Note on Permissions
 
-This tool strictly uses **Read-Only** scopes to query your tenant's data. It does not modify any settings, users, or files. The audit data never leaves your Google Sheet.
+This tool is strictly designed to perform **Read-Only** queries and does not modify any settings, users, or files. The audit data never leaves your Google Sheet.
+
+*Disclaimer regarding Google APIs:* While we use `.readonly` scopes whenever possible, Google does not currently provide read-only scopes for the Groups Settings API (`apps.groups.settings`) and the User Security API (`admin.directory.user.security`). These scopes technically allow write access, even though the script's code never uses it. We recommend locking down edit access to your Apps Script project to prevent malicious modifications.
 
 ## 📝 License
 
@@ -93,7 +95,9 @@ Cet outil s'exécutant dans Google Apps Script, vous n'avez pas besoin d'héberg
 
 ## ⚠️ Remarque Importante sur les Permissions
 
-Cet outil utilise strictement des accès en **Lecture Seule** pour interroger les données de votre organisation. Il ne modifie aucun paramètre, utilisateur ou fichier. Les données d'audit ne quittent jamais votre fichier Google Sheets.
+Cet outil est conçu pour effectuer strictement des requêtes en **Lecture Seule**. Il ne modifie aucun paramètre, utilisateur ou fichier. Les données d'audit ne quittent jamais votre fichier Google Sheets.
+
+*Avertissement concernant les API Google :* Bien que nous utilisions les portées (scopes) `.readonly` dès que possible, Google ne fournit actuellement pas de version en lecture seule pour l'API Groups Settings (`apps.groups.settings`) et l'API User Security (`admin.directory.user.security`). Ces portées autorisent techniquement l'écriture, bien que le code de ce script ne l'utilise jamais. Nous recommandons de restreindre strictement les droits d'édition sur votre projet Apps Script pour éviter toute modification malveillante.
 
 ## 📝 Licence
 
