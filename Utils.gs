@@ -143,10 +143,6 @@ function computeRiskScore(metrics) {
   score += Math.min(10, metrics.failedLogins > 100 ? 10 : Math.round(metrics.failedLogins * 0.1));
   
   // Nouveaux facteurs:
-  // Alertes de haute sévérité (max 15)
-  if (metrics.highSeverityAlerts > 0) {
-    score += Math.min(15, metrics.highSeverityAlerts * 5);
-  }
   // DNS manquants (max 15)
   if (metrics.missingSpf > 0) score += 7;
   if (metrics.missingDmarc > 0) score += 8;

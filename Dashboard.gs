@@ -61,11 +61,9 @@ function _buildDashboard(ss, tr, metrics) {
     failedLogins  : metrics.mLogin?.failedLogins  || 0,
     totalLogins   : metrics.mLogin?.totalLogins   || 0,
     totalDevices  : metrics.mDevices?.totalDevices || 0,
-    nonCompliant  : metrics.mDevices?.nonCompliant || 0,
     missingSpf    : metrics.mDNS?.missingSpf       || 0,
     missingDmarc  : metrics.mDNS?.missingDmarc     || 0,
     orphanGroups  : metrics.mGroups?.orphanGroups  || 0,
-    highSeverityAlerts: metrics.mAlerts?.highSeverity || 0,
   };
 
   // Calcul du score de risque global
@@ -78,7 +76,6 @@ function _buildDashboard(ss, tr, metrics) {
     failedLogins  : m.failedLogins,
     missingSpf    : m.missingSpf,
     missingDmarc  : m.missingDmarc,
-    highSeverityAlerts: m.highSeverityAlerts,
   });
   const riskLvl = riskLevel(riskScore);
 
@@ -172,20 +169,18 @@ function _buildDashboard(ss, tr, metrics) {
     sheet.setRowHeight(kpiRow2 + 3, 28);
   });
 
-  // ── Section Alertes & Appareils ─────────────────────────────
+  // ── Section MDM & Orphelins ─────────────────────────────
   const alertRow = kpiRow2 + 5;
-  _writeSectionTitle(sheet, alertRow, numCols, getLang() === 'fr' ? '🚨 Alertes & MDM' : '🚨 Alerts & MDM');
+  _writeSectionTitle(sheet, alertRow, numCols, getLang() === 'fr' ? '📱 MDM & Grp Orphelins' : '📱 MDM & Orphan Groups');
   sheet.setRowHeight(alertRow, 28);
 
   const alertConfigs = [
-    { label: getLang() === 'fr' ? 'Alertes Critiques' : 'Critical Alerts', value: m.highSeverityAlerts || 0,
-      level: m.highSeverityAlerts > 0 ? 'danger' : 'ok', col: 1 },
     { label: getLang() === 'fr' ? 'Grp Orphelins' : 'Orphan Groups', value: m.orphanGroups || 0,
-      level: m.orphanGroups > 0 ? 'warning' : 'ok', col: 3 },
+      level: m.orphanGroups > 0 ? 'warning' : 'ok', col: 1 },
     { label: getLang() === 'fr' ? 'Appareils MDM' : 'MDM Devices', value: m.totalDevices || 0,
-      level: 'info', col: 5 },
+      level: 'info', col: 3 },
     { label: getLang() === 'fr' ? 'Appareils non conf.' : 'Non-compliant', value: m.nonCompliant || 0,
-      level: m.nonCompliant > 0 ? 'warning' : 'ok', col: 7 },
+      level: m.nonCompliant > 0 ? 'warning' : 'ok', col: 5 },
   ];
 
   const kpiRow3 = alertRow + 1;

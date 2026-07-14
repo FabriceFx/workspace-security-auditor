@@ -129,9 +129,6 @@
     <button class="gw-btn gw-btn-secondary" onclick="runModule('DNS')">
       <span class="material-symbols-outlined">dns</span> <span data-i18n="menu_dns">DNS</span>
     </button>
-    <button class="gw-btn gw-btn-secondary" onclick="runModule('Alerts')">
-      <span class="material-symbols-outlined">warning</span> <span data-i18n="menu_alerts">Alertes</span>
-    </button>
   </div>
 
   <!-- Outils -->
@@ -290,10 +287,9 @@ function runAll() {
     { fn: 'runAuditDrive',    key: 'menu_drive',    pct: 38 },
     { fn: 'runAuditSecurity', key: 'menu_security', pct: 50 },
     { fn: 'runAuditLogs',     key: 'menu_logs',     pct: 62 },
-    { fn: 'runAuditLogin',    key: 'menu_login',    pct: 70 },
-    { fn: 'runAuditDevices',  key: 'menu_devices',  pct: 80 },
-    { fn: 'runAuditDNS',      key: 'menu_dns',      pct: 90 },
-    { fn: 'runAuditAlerts',   key: 'menu_alerts',   pct: 98 },
+    { fn: 'runAuditLogin',    key: 'menu_login',    pct: 75 },
+    { fn: 'runAuditDevices',  key: 'menu_devices',  pct: 88 },
+    { fn: 'runAuditDNS',      key: 'menu_dns',      pct: 98 },
   ];
 
   let idx = 0;
