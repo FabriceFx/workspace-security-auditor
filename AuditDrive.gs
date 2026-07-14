@@ -495,6 +495,16 @@ function auditDrive(filterOpts) {
       metrics.totalFiles += files.length;
 
       for (const file of files) {
+        // Vérifier que le fichier appartient bien au domaine en cours,
+        // ou à un Drive Partagé de l'organisation.
+        const ownersEmails = (file.owners || []).map(o => o.emailAddress || '').filter(Boolean);
+        const isOwnedByDomain = ownersEmails.some(email => email.endsWith('@' + domain));
+        const isInternalSharedDrive = file.driveId && (sharedDrives[file.driveId] !== undefined);
+
+        if (!isOwnedByDomain && !isInternalSharedDrive) {
+          continue;
+        }
+
         const sharingType = _getSharingType(file, domain);
         if (!sharingType) continue;
 
