@@ -632,7 +632,7 @@ function _fetchSharedFilesForUsers(emails) {
     // Recherche les fichiers dont l'utilisateur est propriétaire OU créateur (ex: Shared Drives)
     const ownerQ = chunk.map(e => `('${e}' in owners OR '${e}' in creators)`).join(' OR ');
     const sharingQ = `visibility='anyoneWithLink' OR visibility='anyoneCanFind'`;
-    const query = `(${ownerQ}) AND (${sharingQ})`;
+    const query = `(${ownerQ}) AND (${sharingQ}) AND trashed = false`;
 
     let pageToken = null;
     do {
@@ -665,7 +665,7 @@ function _fetchSharedFilesForUsers(emails) {
 function _fetchSharedFiles() {
   const results = [];
   let pageToken = null;
-  const query = "visibility='anyoneWithLink' OR visibility='anyoneCanFind'";
+  const query = "(visibility='anyoneWithLink' OR visibility='anyoneCanFind') AND trashed = false";
 
   do {
     const params = {
