@@ -460,7 +460,22 @@ function auditDrive(filterOpts) {
   const scopeLabel = _scopeLabel(filter, tr);
   prepareSheet(sheet, headers, `${SHEETS.DRIVE} — ${scopeLabel}`);
 
-  const domains = getDomains();
+  const rawDomains = getDomains();
+  let actualDomains = [];
+  for (const d of rawDomains) {
+    if (d === '*' || d === 'my_customer') {
+      try {
+        const domainList = AdminDirectory.Domains.list('my_customer');
+        if (domainList.domains) {
+          actualDomains.push(...domainList.domains.map(dom => dom.domainName));
+        }
+      } catch(e) {}
+    } else {
+      actualDomains.push(d);
+    }
+  }
+  if (actualDomains.length === 0) actualDomains = rawDomains;
+  const domains = [...new Set(actualDomains)];
   const allRows = [];
   const metrics = { externalShares: 0, publicFiles: 0, totalFiles: 0 };
 
@@ -486,13 +501,19 @@ function auditDrive(filterOpts) {
     }
   }
 
+  // Récupération globale des fichiers une seule fois pour éviter les doublons d'API
+  const allFetchedFiles = targetEmails !== null
+    ? _fetchSharedFilesForUsers(targetEmails)
+    : _fetchSharedFiles();
+
   for (const domain of domains) {
     try {
-      const files = targetEmails !== null
-        ? _fetchSharedFilesForUsers(targetEmails)
-        : _fetchSharedFiles();
+      const files = allFetchedFiles;
 
-      metrics.totalFiles += files.length;
+      // On ne compte les fichiers globaux qu'une fois pour les métriques
+      if (domain === domains[0]) {
+        metrics.totalFiles += files.length;
+      }
 
       for (const file of files) {
         // Vérifier que le fichier appartient bien au domaine en cours,
