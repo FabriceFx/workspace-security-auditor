@@ -72,53 +72,207 @@ function showConfigDialog() {
 <head>
 <meta charset="UTF-8">
 <base target="_top">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
-<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
-${HtmlService.createHtmlOutputFromFile('Styles').getContent()}
+<style>
+  :root {
+    --primary: #4F46E5;
+    --primary-hover: #4338CA;
+    --bg: #F9FAFB;
+    --surface: #FFFFFF;
+    --text-main: #111827;
+    --text-muted: #6B7280;
+    --border: #E5E7EB;
+    --ring: rgba(79, 70, 229, 0.2);
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--surface);
+    color: var(--text-main);
+    margin: 0;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-row {
+    display: flex;
+    gap: 16px;
+  }
+  .form-row .form-group {
+    flex: 1;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-main);
+    margin-bottom: 6px;
+  }
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .input-wrapper .material-symbols-outlined {
+    position: absolute;
+    left: 12px;
+    color: #9CA3AF;
+    font-size: 18px;
+    pointer-events: none;
+  }
+  input, select {
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-main);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px 10px 38px;
+    box-sizing: border-box;
+    transition: all 0.2s;
+    outline: none;
+    appearance: none;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  select {
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+  }
+  input:hover, select:hover {
+    border-color: #D1D5DB;
+  }
+  input:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+  input::placeholder {
+    color: #9CA3AF;
+  }
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  button {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-secondary {
+    background: var(--surface);
+    color: #4B5563;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  .btn-secondary:hover {
+    background: #F3F4F6;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .btn-primary:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+  }
+  .btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  .success-msg {
+    display: none;
+    margin-top: 16px;
+    padding: 12px;
+    background: #ECFDF5;
+    border: 1px solid #10B981;
+    color: #065F46;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    animation: fadeIn 0.3s;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+</style>
 </head>
 <body>
 
-<div class="block form-group">
-  <label for="domains" class="gw-label">${tr.cfg_domains}</label>
-  <input id="domains" class="gw-input" type="text" value="${domains}" placeholder="* ou example.com, company.org">
-</div>
-
-<div class="block form-group">
-  <label for="lang" class="gw-label">${tr.cfg_lang}</label>
-  <select id="lang" class="gw-input">
-    <option value="fr" ${lang === 'fr' ? 'selected' : ''}>🇫🇷 Français</option>
-    <option value="en" ${lang === 'en' ? 'selected' : ''}>🇬🇧 English</option>
-  </select>
-</div>
-
-<div class="block form-group">
-  <label for="emails" class="gw-label">${tr.cfg_emails}</label>
-  <input id="emails" class="gw-input" type="text" value="${emails}" placeholder="admin@company.com">
-</div>
-
-<div class="row2">
-  <div class="block form-group">
-    <label for="schedDay" class="gw-label">${tr.cfg_sched_day}</label>
-    <select id="schedDay" class="gw-input">
-      ${tr.days.map((d, i) => `<option value="${i}" ${i == schedDay ? 'selected' : ''}>${d}</option>`).join('')}
-    </select>
+  <div class="form-group">
+    <label for="domains">${tr.cfg_domains}</label>
+    <div class="input-wrapper">
+      <span class="material-symbols-outlined">domain</span>
+      <input id="domains" type="text" value="${domains}" placeholder="* ou example.com, company.org">
+    </div>
   </div>
-  <div class="block form-group">
-    <label for="schedHour" class="gw-label">${tr.cfg_sched_hour}</label>
-    <input id="schedHour" class="gw-input" type="number" min="0" max="23" value="${schedHour}">
+
+  <div class="form-group">
+    <label for="lang">${tr.cfg_lang}</label>
+    <div class="input-wrapper">
+      <span class="material-symbols-outlined">language</span>
+      <select id="lang">
+        <option value="fr" ${lang === 'fr' ? 'selected' : ''}>🇫🇷 Français</option>
+        <option value="en" ${lang === 'en' ? 'selected' : ''}>🇬🇧 English</option>
+      </select>
+    </div>
   </div>
-</div>
 
-<div class="success-msg" id="msg">
-  <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">check_circle</span>
-  ${tr.cfg_saved}
-</div>
+  <div class="form-group">
+    <label for="emails">${tr.cfg_emails}</label>
+    <div class="input-wrapper">
+      <span class="material-symbols-outlined">mail</span>
+      <input id="emails" type="text" value="${emails}" placeholder="admin@company.com">
+    </div>
+  </div>
 
-<div class="footer-actions">
-  <button class="gw-btn gw-btn-secondary" onclick="google.script.host.close()">${lang === 'fr' ? 'Annuler' : 'Cancel'}</button>
-  <button class="gw-btn gw-btn-primary" id="btnSave" onclick="save()">${tr.cfg_save}</button>
-</div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="schedDay">${tr.cfg_sched_day}</label>
+      <div class="input-wrapper">
+        <span class="material-symbols-outlined">calendar_today</span>
+        <select id="schedDay">
+          ${tr.days.map((d, i) => `<option value="${i}" ${i == schedDay ? 'selected' : ''}>${d}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="schedHour">${tr.cfg_sched_hour}</label>
+      <div class="input-wrapper">
+        <span class="material-symbols-outlined">schedule</span>
+        <input id="schedHour" type="number" min="0" max="23" value="${schedHour}">
+      </div>
+    </div>
+  </div>
+
+  <div class="success-msg" id="msg">
+    <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px;">check_circle</span>
+    ${tr.cfg_saved}
+  </div>
+
+  <div class="footer">
+    <button class="btn-secondary" onclick="google.script.host.close()">
+      ${lang === 'fr' ? 'Annuler' : 'Cancel'}
+    </button>
+    <button class="btn-primary" id="btnSave" onclick="save()">
+      <span class="material-symbols-outlined" style="font-size:18px;">save</span>
+      ${tr.cfg_save}
+    </button>
+  </div>
 
 <script>
 function save() {
@@ -139,10 +293,10 @@ function save() {
     .withFailureHandler(err => { btn.disabled = false; alert(err.message); })
     .saveConfig(data);
 }
-<\/script>
+</script>
 </body>
 </html>`)
-    .setWidth(440).setHeight(480);
+    .setWidth(460).setHeight(520);
 
   SpreadsheetApp.getUi().showModalDialog(html, tr.cfg_title);
 }
